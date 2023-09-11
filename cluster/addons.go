@@ -186,6 +186,7 @@ func (c *Cluster) deployK8sAddOns(ctx context.Context, data map[string]interface
 func (c *Cluster) deployUserAddOns(ctx context.Context) error {
 	log.Infof(ctx, "[addons] Setting up user addons")
 	if c.Addons != "" {
+		// deletes existing job if resource name is rke-user-addon and redeploy user addons
 		if err := c.doAddonDeploy(ctx, c.Addons, UserAddonResourceName, false); err != nil {
 			return err
 		}
@@ -204,6 +205,7 @@ func (c *Cluster) deployUserAddOns(ctx context.Context) error {
 		}
 	}
 	if len(c.AddonsInclude) > 0 {
+		// deletes existing job if resource name is rke-user-includes-addons and redeploy user addons
 		if err := c.deployAddonsInclude(ctx); err != nil {
 			return err
 		}
@@ -500,7 +502,7 @@ func (c *Cluster) doAddonDeploy(ctx context.Context, addonYaml, resourceName str
 		return &addonError{fmt.Sprintf("Failed to generate addon execute job: %v", err), isCritical}
 	}
 
-	if err = c.ApplySystemAddonExecuteJob(addonJob, addonUpdated); err != nil {
+	if err = c.ApplySystemAddonExecuteJob(addonJob, resourceName, addonUpdated); err != nil {
 		return &addonError{fmt.Sprintf("%v", err), isCritical}
 	}
 	return nil
@@ -519,7 +521,7 @@ func (c *Cluster) doAddonDelete(ctx context.Context, resourceName string, isCrit
 	if err != nil {
 		return &addonError{fmt.Sprintf("Failed to generate addon delete job: %v", err), isCritical}
 	}
-	if err := k8s.ApplyK8sSystemJob(deleteJob, c.LocalKubeConfigPath, c.K8sWrapTransport, c.AddonJobTimeout*2, false); err != nil {
+	if err := k8s.ApplyK8sSystemJob(deleteJob, c.LocalKubeConfigPath, c.K8sWrapTransport, c.AddonJobTimeout*2, resourceName, false); err != nil {
 		return &addonError{fmt.Sprintf("%v", err), isCritical}
 	}
 	// At this point, the addon should be deleted. We need to clean up by deleting the deploy and delete jobs.
@@ -545,7 +547,6 @@ func (c *Cluster) StoreAddonConfigMap(ctx context.Context, addonYaml string, add
 	timeout := make(chan bool, 1)
 	go func() {
 		for {
-
 			updated, err = k8s.UpdateConfigMap(kubeClient, []byte(addonYaml), addonName)
 			if err != nil {
 				time.Sleep(time.Second * 5)
@@ -564,8 +565,8 @@ func (c *Cluster) StoreAddonConfigMap(ctx context.Context, addonYaml string, add
 	}
 }
 
-func (c *Cluster) ApplySystemAddonExecuteJob(addonJob string, addonUpdated bool) error {
-	return k8s.ApplyK8sSystemJob(addonJob, c.LocalKubeConfigPath, c.K8sWrapTransport, c.AddonJobTimeout, addonUpdated)
+func (c *Cluster) ApplySystemAddonExecuteJob(addonJob, resourceName string, addonUpdated bool) error {
+	return k8s.ApplyK8sSystemJob(addonJob, c.LocalKubeConfigPath, c.K8sWrapTransport, c.AddonJobTimeout, resourceName, addonUpdated)
 }
 
 func (c *Cluster) deployIngress(ctx context.Context, data map[string]interface{}) error {

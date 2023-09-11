@@ -135,7 +135,7 @@ func (h *Host) CleanUp(ctx context.Context, toCleanPaths []string, cleanerImage 
 		return err
 	}
 
-	if _, err := docker.WaitForContainer(ctx, h.DClient, h.Address, CleanerContainerName); err != nil {
+	if _, err := docker.WaitForContainer(ctx, h.DClient, h.Address, CleanerContainerName, true); err != nil {
 		return err
 	}
 
@@ -418,6 +418,13 @@ func (h *Host) GetExtraArgs(service v3.BaseService) map[string]string {
 	default:
 		return service.ExtraArgs
 	}
+}
+
+func (h *Host) GetExtraArgsArray(service v3.BaseService) map[string][]string {
+	if h.OS() == "windows" && len(service.WindowsExtraArgsArray) > 0 {
+		return service.WindowsExtraArgsArray
+	}
+	return service.ExtraArgsArray
 }
 
 func DoRunLogCleaner(ctx context.Context, host *Host, alpineImage string, prsMap map[string]v3.PrivateRegistry) error {

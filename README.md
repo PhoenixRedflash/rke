@@ -1,10 +1,14 @@
 # rke
 
+*This file is auto-generated from README-template.md, please make any changes there.*
+
 Rancher Kubernetes Engine, an extremely simple, lightning fast Kubernetes installer that works everywhere.
 
 ## Latest Release
-
-* v1.3.4 - Read the full release [notes](https://github.com/rancher/rke/releases/tag/v1.3.4).
+* v1.3
+  * v1.3.22 - Read the full release [notes](https://github.com/rancher/rke/releases/tag/v1.3.22).
+* v1.2
+  * v1.2.23 - Read the full release [notes](https://github.com/rancher/rke/releases/tag/v1.2.23).
 
 ## Download
 
@@ -32,7 +36,7 @@ RKE now fetches `data.json` from https://github.com/rancher/kontainer-driver-met
 ```bash
 go generate
 
-# Change RANCHER_METADATA_URL to an external URL instead of using https://releases.rancher.com/kontainer-driver-metadata/dev-v2.4/data.json by default
+# Change RANCHER_METADATA_URL to an external URL instead of using https://releases.rancher.com/kontainer-driver-metadata/dev-v2.6/data.json by default
 RANCHER_METADATA_URL=${URL} go generate
 
 # Or load it from local file
@@ -50,11 +54,11 @@ RANCHER_METADATA_URL=${URL} rke [commands] [options]
 RANCHER_METADATA_URL=${./local/data.json} rke [commands] [options]
 ```
     
-`RANCHER_METADATA_URL` defaults to `https://releases.rancher.com/kontainer-driver-metadata/dev-v2.4/data.json`.
+`RANCHER_METADATA_URL` defaults to `https://releases.rancher.com/kontainer-driver-metadata/dev-v2.6/data.json`.
 
 ## License
 
-Copyright (c) 2021 [Rancher Labs, Inc.](http://rancher.com)
+Copyright (c) 2023 [Rancher Labs, Inc.](http://rancher.com)
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

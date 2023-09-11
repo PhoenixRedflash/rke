@@ -75,67 +75,107 @@ const (
 	WeaveNetworkAppName              = "weave-net"
 	WeaveNetPriorityClassNameKeyName = "weave_net_priority_class_name"
 
-	AciNetworkPlugin            = "aci"
-	AciOVSMemoryLimit           = "aci_ovs_memory_limit"
-	AciImagePullPolicy          = "aci_image_pull_policy"
-	AciPBRTrackingNonSnat       = "aci_pbr_tracking_non_snat"
-	AciInstallIstio             = "aci_install_istio"
-	AciIstioProfile             = "aci_istio_profile"
-	AciDropLogEnable            = "aci_drop_log_enable"
-	AciControllerLogLevel       = "aci_controller_log_level"
-	AciHostAgentLogLevel        = "aci_host_agent_log_level"
-	AciOpflexAgentLogLevel      = "aci_opflex_agent_log_level"
-	AciApicRefreshTime          = "aci_apic_refresh_time"
-	AciServiceMonitorInterval   = "aci_server_monitor_interval"
-	AciSystemIdentifier         = "aci_system_identifier"
-	AciToken                    = "aci_token"
-	AciApicUserName             = "aci_apic_user_name"
-	AciApicUserKey              = "aci_apic_user_key"
-	AciApicUserCrt              = "aci_apic_user_crt"
-	AciVmmDomain                = "aci_vmm_domain"
-	AciVmmController            = "aci_vmm_controller"
-	AciEncapType                = "aci_encap_type"
-	AciAEP                      = "aci_aep"
-	AciVRFName                  = "aci_vrf_name"
-	AciVRFTenant                = "aci_vrf_tenant"
-	AciL3Out                    = "aci_l3out"
-	AciDynamicExternalSubnet    = "aci_dynamic_external_subnet"
-	AciStaticExternalSubnet     = "aci_static_external_subnet"
-	AciServiceGraphSubnet       = "aci_service_graph_subnet"
-	AciKubeAPIVlan              = "aci_kubeapi_vlan"
-	AciServiceVlan              = "aci_service_vlan"
-	AciInfraVlan                = "aci_infra_vlan"
-	AciImagePullSecret          = "aci_image_pull_secret"
-	AciTenant                   = "aci_tenant"
-	AciNodeSubnet               = "aci_node_subnet"
-	AciMcastRangeStart          = "aci_mcast_range_start"
-	AciMcastRangeEnd            = "aci_mcast_range_end"
-	AciUseAciCniPriorityClass   = "aci_use_aci_cni_priority_class"
-	AciNoPriorityClass          = "aci_no_priority_class"
-	AciMaxNodesSvcGraph         = "aci_max_nodes_svc_graph"
-	AciSnatContractScope        = "aci_snat_contract_scope"
-	AciPodSubnetChunkSize       = "aci_pod_subnet_chunk_size"
-	AciEnableEndpointSlice      = "aci_enable_endpoint_slice"
-	AciSnatNamespace            = "aci_snat_namespace"
-	AciEpRegistry               = "aci_ep_registry"
-	AciOpflexMode               = "aci_opflex_mode"
-	AciSnatPortRangeStart       = "aci_snat_port_range_start"
-	AciSnatPortRangeEnd         = "aci_snat_port_range_end"
-	AciSnatPortsPerNode         = "aci_snat_ports_per_node"
-	AciOpflexClientSSL          = "aci_opflex_client_ssl"
-	AciUsePrivilegedContainer   = "aci_use_privileged_container"
-	AciUseHostNetnsVolume       = "aci_use_host_netns_volume"
-	AciUseOpflexServerVolume    = "aci_use_opflex_server_volume"
-	AciKafkaClientCrt           = "aci_kafka_client_crt"
-	AciKafkaClientKey           = "aci_kafka_client_key"
-	AciSubnetDomainName         = "aci_subnet_domain_name"
-	AciCApic                    = "aci_capic"
-	AciUseAciAnywhereCRD        = "aci_use_aci_anywhere_crd"
-	AciOverlayVRFName           = "aci_overlay_vrf_name"
-	AciGbpPodSubnet             = "aci_gbp_pod_subnet"
-	AciRunGbpContainer          = "aci_run_gbp_container"
-	AciRunOpflexServerContainer = "aci_run_opflex_server_container"
-	AciOpflexServerPort         = "aci_opflex_server_port"
+	AciNetworkPlugin                        = "aci"
+	AciOVSMemoryLimit                       = "aci_ovs_memory_limit"
+	AciOVSMemoryRequest                     = "aci_ovs_memory_request"
+	AciImagePullPolicy                      = "aci_image_pull_policy"
+	AciPBRTrackingNonSnat                   = "aci_pbr_tracking_non_snat"
+	AciInstallIstio                         = "aci_install_istio"
+	AciIstioProfile                         = "aci_istio_profile"
+	AciDropLogEnable                        = "aci_drop_log_enable"
+	AciControllerLogLevel                   = "aci_controller_log_level"
+	AciHostAgentLogLevel                    = "aci_host_agent_log_level"
+	AciOpflexAgentLogLevel                  = "aci_opflex_agent_log_level"
+	AciApicRefreshTime                      = "aci_apic_refresh_time"
+	AciServiceMonitorInterval               = "aci_server_monitor_interval"
+	AciSystemIdentifier                     = "aci_system_identifier"
+	AciToken                                = "aci_token"
+	AciApicUserName                         = "aci_apic_user_name"
+	AciApicUserKey                          = "aci_apic_user_key"
+	AciApicUserCrt                          = "aci_apic_user_crt"
+	AciVmmDomain                            = "aci_vmm_domain"
+	AciVmmController                        = "aci_vmm_controller"
+	AciEncapType                            = "aci_encap_type"
+	AciAEP                                  = "aci_aep"
+	AciVRFName                              = "aci_vrf_name"
+	AciVRFTenant                            = "aci_vrf_tenant"
+	AciL3Out                                = "aci_l3out"
+	AciDynamicExternalSubnet                = "aci_dynamic_external_subnet"
+	AciStaticExternalSubnet                 = "aci_static_external_subnet"
+	AciServiceGraphSubnet                   = "aci_service_graph_subnet"
+	AciKubeAPIVlan                          = "aci_kubeapi_vlan"
+	AciServiceVlan                          = "aci_service_vlan"
+	AciInfraVlan                            = "aci_infra_vlan"
+	AciImagePullSecret                      = "aci_image_pull_secret"
+	AciTenant                               = "aci_tenant"
+	AciNodeSubnet                           = "aci_node_subnet"
+	AciMcastRangeStart                      = "aci_mcast_range_start"
+	AciMcastRangeEnd                        = "aci_mcast_range_end"
+	AciUseAciCniPriorityClass               = "aci_use_aci_cni_priority_class"
+	AciNoPriorityClass                      = "aci_no_priority_class"
+	AciMaxNodesSvcGraph                     = "aci_max_nodes_svc_graph"
+	AciSnatContractScope                    = "aci_snat_contract_scope"
+	AciPodSubnetChunkSize                   = "aci_pod_subnet_chunk_size"
+	AciEnableEndpointSlice                  = "aci_enable_endpoint_slice"
+	AciSnatNamespace                        = "aci_snat_namespace"
+	AciEpRegistry                           = "aci_ep_registry"
+	AciOpflexMode                           = "aci_opflex_mode"
+	AciSnatPortRangeStart                   = "aci_snat_port_range_start"
+	AciSnatPortRangeEnd                     = "aci_snat_port_range_end"
+	AciSnatPortsPerNode                     = "aci_snat_ports_per_node"
+	AciOpflexClientSSL                      = "aci_opflex_client_ssl"
+	AciUsePrivilegedContainer               = "aci_use_privileged_container"
+	AciUseHostNetnsVolume                   = "aci_use_host_netns_volume"
+	AciUseOpflexServerVolume                = "aci_use_opflex_server_volume"
+	AciKafkaClientCrt                       = "aci_kafka_client_crt"
+	AciKafkaClientKey                       = "aci_kafka_client_key"
+	AciSubnetDomainName                     = "aci_subnet_domain_name"
+	AciCApic                                = "aci_capic"
+	AciUseAciAnywhereCRD                    = "aci_use_aci_anywhere_crd"
+	AciOverlayVRFName                       = "aci_overlay_vrf_name"
+	AciGbpPodSubnet                         = "aci_gbp_pod_subnet"
+	AciRunGbpContainer                      = "aci_run_gbp_container"
+	AciRunOpflexServerContainer             = "aci_run_opflex_server_container"
+	AciOpflexServerPort                     = "aci_opflex_server_port"
+	AciDurationWaitForNetwork               = "aci_duration_wait_for_network"
+	AciDisableWaitForNetwork                = "aci_disable_wait_for_network"
+	AciUseClusterRole                       = "aci_use_cluster_role"
+	AciApicSubscriptionDelay                = "aci_apic_subscription_delay"
+	AciApicRefreshTickerAdjust              = "aci_apic_refresh_ticker_adjust"
+	AciDisablePeriodicSnatGlobalInfoSync    = "aci_disable_periodic_snat_global_info_sync"
+	AciOpflexDeviceDeleteTimeout            = "aci_opflex_device_delete_timeout"
+	AciMTUHeadRoom                          = "aci_mtu_head_room"
+	AciNodePodIfEnable                      = "aci_node_pod_if_enable"
+	AciSriovEnable                          = "aci_sriov_enable"
+	AciMultusDisable                        = "aci_multus_disable"
+	AciNoWaitForServiceEpReadiness          = "aci_no_wait_for_service_ep_readiness"
+	AciAddExternalSubnetsToRdconfig         = "aci_add_external_subnets_to_rdconfig"
+	AciServiceGraphEndpointAddDelay         = "aci_service_graph_endpoint_add_delay"
+	AciHppOptimization                      = "aci_hpp_optimization"
+	AciSleepTimeSnatGlobalInfoSync          = "aci_sleep_time_snat_global_info_sync"
+	AciOpflexAgentOpflexAsyncjsonEnabled    = "aci_opflex_agent_opflex_asyncjson_enabled"
+	AciOpflexAgentOvsAsyncjsonEnabled       = "aci_opflex_agent_ovs_asyncjson_enabled"
+	AciOpflexAgentPolicyRetryDelayTimer     = "aci_opflex_agent_policy_retry_delay_timer"
+	AciAciMultipod                          = "aci_aci_multipod"
+	AciOpflexDeviceReconnectWaitTimeout     = "aci_opflex_device_reconnect_wait_timeout"
+	AciAciMultipodUbuntu                    = "aci_aci_multipod_ubuntu"
+	AciDhcpRenewMaxRetryCount               = "aci_dhcp_renew_max_retry_count"
+	AciDhcpDelay                            = "aci_dhcp_delay"
+	AciUseSystemNodePriorityClass           = "aci_use_system_node_priority_class"
+	AciAccProvisionOperatorMemoryRequest    = "aci_acc_provision_operator_memory_request"
+	AciAccProvisionOperatorMemoryLimit      = "aci_acc_provision_operator_memory_limit"
+	AciAciContainersControllerMemoryRequest = "aci_aci_containers_controller_memory_request"
+	AciAciContainersControllerMemoryLimit   = "aci_aci_containers_controller_memory_limit"
+	AciAciContainersHostMemoryRequest       = "aci_aci_containers_host_memory_request"
+	AciAciContainersHostMemoryLimit         = "aci_aci_containers_host_memory_limit"
+	AciAciContainersOperatorMemoryRequest   = "aci_aci_containers_operator_memory_request"
+	AciAciContainersOperatorMemoryLimit     = "aci_aci_containers_operator_memory_limit"
+	AciMcastDaemonMemoryRequest             = "aci_mcast_daemon_memory_request"
+	AciMcastDaemonMemoryLimit               = "aci_mcast_daemon_memory_limit"
+	AciOpflexAgentMemoryRequest             = "aci_opflex_agent_memory_request"
+	AciOpflexAgentMemoryLimit               = "aci_opflex_agent_memory_limit"
+	AciAciContainersMemoryRequest           = "aci_aci_containers_memory_request"
+	AciAciContainersMemoryLimit             = "aci_aci_containers_memory_limit"
 	// List of map keys to be used with network templates
 
 	// EtcdEndpoints is the server address for Etcd, used by calico
@@ -225,15 +265,13 @@ const (
 	AciControllerContainer                 = "AciControllerContainer"
 	AciGbpServerContainer                  = "AciGbpServerContainer"
 	AciOpflexServerContainer               = "AciOpflexServerContainer"
-	StaticServiceIPStart                   = "StaticServiceIPStart"
-	StaticServiceIPEnd                     = "StaticServiceIPEnd"
-	PodGateway                             = "PodGateway"
-	PodIPStart                             = "PodIPStart"
-	PodIPEnd                               = "PodIPEnd"
+	StaticServiceIPPool                    = "StaticServiceIPPool"
+	PodNetwork                             = "PodNetwork"
+	PodSubnet                              = "PodSubnet"
+	PodIPPool                              = "PodIPPool"
 	NodeServiceIPStart                     = "NodeServiceIPStart"
 	NodeServiceIPEnd                       = "NodeServiceIPEnd"
-	ServiceIPStart                         = "ServiceIPStart"
-	ServiceIPEnd                           = "ServiceIPEnd"
+	ServiceIPPool                          = "ServiceIPPool"
 	UseAciCniPriorityClass                 = "UseAciCniPriorityClass"
 	NoPriorityClass                        = "NoPriorityClass"
 	MaxNodesSvcGraph                       = "MaxNodesSvcGraph"
@@ -261,12 +299,63 @@ const (
 	RunGbpContainer                        = "RunGbpContainer"
 	RunOpflexServerContainer               = "RunOpflexServerContainer"
 	OpflexServerPort                       = "OpflexServerPort"
+	DurationWaitForNetwork                 = "DurationWaitForNetwork"
+	DisableWaitForNetwork                  = "DisableWaitForNetwork"
+	UseClusterRole                         = "UseClusterRole"
+	ApicSubscriptionDelay                  = "ApicSubscriptionDelay"
+	ApicRefreshTickerAdjust                = "ApicRefreshTickerAdjust"
+	DisablePeriodicSnatGlobalInfoSync      = "DisablePeriodicSnatGlobalInfoSync"
+	OpflexDeviceDeleteTimeout              = "OpflexDeviceDeleteTimeout"
+	MTUHeadRoom                            = "MTUHeadRoom"
+	NodePodIfEnable                        = "NodePodIfEnable"
+	SriovEnable                            = "SriovEnable"
+	MultusDisable                          = "MultusDisable"
+	NoWaitForServiceEpReadiness            = "NoWaitForServiceEpReadiness"
+	AddExternalSubnetsToRdconfig           = "AddExternalSubnetsToRdconfig"
+	ServiceGraphEndpointAddDelay           = "ServiceGraphEndpointAddDelay"
+	ServiceGraphEndpointAddServices        = "ServiceGraphEndpointAddServices"
+	HppOptimization                        = "HppOptimization"
+	SleepTimeSnatGlobalInfoSync            = "SleepTimeSnatGlobalInfoSync"
+	OpflexAgentOpflexAsyncjsonEnabled      = "OpflexAgentOpflexAsyncjsonEnabled"
+	OpflexAgentOvsAsyncjsonEnabled         = "OpflexAgentOvsAsyncjsonEnabled"
+	OpflexAgentPolicyRetryDelayTimer       = "OpflexAgentPolicyRetryDelayTimer"
+	AciMultipod                            = "AciMultipod"
+	OpflexDeviceReconnectWaitTimeout       = "OpflexDeviceReconnectWaitTimeout"
+	AciMultipodUbuntu                      = "AciMultipodUbuntu"
+	DhcpRenewMaxRetryCount                 = "DhcpRenewMaxRetryCount"
+	DhcpDelay                              = "DhcpDelay"
 	OVSMemoryLimit                         = "OVSMemoryLimit"
+	OVSMemoryRequest                       = "OVSMemoryRequest"
 	NodeSubnet                             = "NodeSubnet"
 	NodeSelector                           = "NodeSelector"
 	UpdateStrategy                         = "UpdateStrategy"
 	Tolerations                            = "Tolerations"
+	UseSystemNodePriorityClass             = "UseSystemNodePriorityClass"
+	AccProvisionOperatorMemoryRequest      = "AccProvisionOperatorMemoryRequest"
+	AccProvisionOperatorMemoryLimit        = "AccProvisionOperatorMemoryLimit"
+	AciContainersControllerMemoryRequest   = "AciContainersControllerMemoryRequest"
+	AciContainersControllerMemoryLimit     = "AciContainersControllerMemoryLimit"
+	AciContainersHostMemoryRequest         = "AciContainersHostMemoryRequest"
+	AciContainersHostMemoryLimit           = "AciContainersHostMemoryLimit"
+	AciContainersOperatorMemoryRequest     = "AciContainersOperatorMemoryRequest"
+	AciContainersOperatorMemoryLimit       = "AciContainersOperatorMemoryLimit"
+	McastDaemonMemoryRequest               = "McastDaemonMemoryRequest"
+	McastDaemonMemoryLimit                 = "McastDaemonMemoryLimit"
+	OpflexAgentMemoryRequest               = "OpflexAgentMemoryRequest"
+	OpflexAgentMemoryLimit                 = "OpflexAgentMemoryLimit"
+	AciContainersMemoryRequest             = "AciContainersMemoryRequest"
+	AciContainersMemoryLimit               = "AciContainersMemoryLimit"
 )
+
+type IPPool struct {
+	Start net.IP
+	End   net.IP
+}
+
+type PodIPNetwork struct {
+	Subnet  net.IPNet
+	Gateway net.IP
+}
 
 var EtcdPortList = []string{
 	EtcdPort1,
@@ -286,7 +375,7 @@ var EtcdClientPortList = []string{
 }
 
 var CalicoNetworkLabels = []string{CalicoNodeLabel, CalicoControllerLabel}
-var IPv6CompatibleNetworkPlugins = []string{CalicoNetworkPlugin}
+var IPv6CompatibleNetworkPlugins = []string{CalicoNetworkPlugin, AciNetworkPlugin}
 
 func (c *Cluster) deployNetworkPlugin(ctx context.Context, data map[string]interface{}) error {
 	log.Infof(ctx, "[network] Setting up network plugin: %s", c.Network.Plugin)
@@ -448,113 +537,186 @@ func (c *Cluster) doWeaveDeploy(ctx context.Context, data map[string]interface{}
 }
 
 func (c *Cluster) doAciDeploy(ctx context.Context, data map[string]interface{}) error {
-	_, clusterCIDR, err := net.ParseCIDR(c.ClusterCIDR)
-	if err != nil {
-		return err
+	var podIPPool []IPPool
+	var podNetwork []PodIPNetwork
+	var podSubnet []string
+
+	ClusterCIDRs := strings.Split(c.ClusterCIDR, ",")
+	for _, clusterCIDR := range ClusterCIDRs {
+		podSubnet = append(podSubnet, fmt.Sprintf("\"%s\"", clusterCIDR))
+		_, clusterCIDR, err := net.ParseCIDR(clusterCIDR)
+		if err != nil {
+			return err
+		}
+		podIPStart, podIPEnd := cidr.AddressRange(clusterCIDR)
+		podIPPool = append(podIPPool, IPPool{Start: cidr.Inc(cidr.Inc(podIPStart)), End: cidr.Dec(podIPEnd)})
+		podNetwork = append(podNetwork, PodIPNetwork{Subnet: *clusterCIDR, Gateway: cidr.Inc(podIPStart)})
 	}
-	podIPStart, podIPEnd := cidr.AddressRange(clusterCIDR)
-	_, staticExternalSubnet, err := net.ParseCIDR(c.Network.Options[AciStaticExternalSubnet])
-	if err != nil {
-		return err
+
+	var staticServiceIPPool []IPPool
+	var staticExtern []string
+	staticExternalSubnets := strings.Split(c.Network.Options[AciStaticExternalSubnet], ",")
+	for _, staticExternalSubnet := range staticExternalSubnets {
+		staticExtern = append(staticExtern, fmt.Sprintf("\"%s\"", staticExternalSubnet))
+		_, externStatic, err := net.ParseCIDR(staticExternalSubnet)
+		if err != nil {
+			return err
+		}
+		staticServiceIPStart, staticServiceIPEnd := cidr.AddressRange(externStatic)
+		staticServiceIPPool = append(staticServiceIPPool, IPPool{Start: cidr.Inc(cidr.Inc(staticServiceIPStart)), End: cidr.Dec(staticServiceIPEnd)})
 	}
-	staticServiceIPStart, staticServiceIPEnd := cidr.AddressRange(staticExternalSubnet)
+
 	_, svcGraphSubnet, err := net.ParseCIDR(c.Network.Options[AciServiceGraphSubnet])
 	if err != nil {
 		return err
 	}
 	nodeServiceIPStart, nodeServiceIPEnd := cidr.AddressRange(svcGraphSubnet)
-	_, dynamicExternalSubnet, err := net.ParseCIDR(c.Network.Options[AciDynamicExternalSubnet])
-	if err != nil {
-		return err
+
+	var serviceIPPool []IPPool
+	var dynamicExtern []string
+	dynamicExternalSubnets := strings.Split(c.Network.Options[AciDynamicExternalSubnet], ",")
+	for _, dynamicExternalSubnet := range dynamicExternalSubnets {
+		dynamicExtern = append(dynamicExtern, fmt.Sprintf("\"%s\"", dynamicExternalSubnet))
+		_, externDynamic, err := net.ParseCIDR(dynamicExternalSubnet)
+		if err != nil {
+			return err
+		}
+		serviceIPStart, serviceIPEnd := cidr.AddressRange(externDynamic)
+		serviceIPPool = append(serviceIPPool, IPPool{Start: cidr.Inc(cidr.Inc(serviceIPStart)), End: cidr.Dec(serviceIPEnd)})
 	}
-	serviceIPStart, serviceIPEnd := cidr.AddressRange(dynamicExternalSubnet)
+
+	var nodeSubnets []string
+	NodeSubnets := strings.Split(c.Network.Options[AciNodeSubnet], ",")
+	for _, nodeSubnet := range NodeSubnets {
+		nodeSubnets = append(nodeSubnets, fmt.Sprintf("\"%s\"", nodeSubnet))
+	}
+
 	if c.Network.Options[AciTenant] == "" {
 		c.Network.Options[AciTenant] = c.Network.Options[AciSystemIdentifier]
 	}
 
 	AciConfig := map[string]interface{}{
-		SystemIdentifier:         c.Network.Options[AciSystemIdentifier],
-		ApicHosts:                c.Network.AciNetworkProvider.ApicHosts,
-		Token:                    c.Network.Options[AciToken],
-		ApicUserName:             c.Network.Options[AciApicUserName],
-		ApicUserKey:              c.Network.Options[AciApicUserKey],
-		ApicUserCrt:              c.Network.Options[AciApicUserCrt],
-		ApicRefreshTime:          c.Network.Options[AciApicRefreshTime],
-		VmmDomain:                c.Network.Options[AciVmmDomain],
-		VmmController:            c.Network.Options[AciVmmController],
-		EncapType:                c.Network.Options[AciEncapType],
-		McastRangeStart:          c.Network.Options[AciMcastRangeStart],
-		McastRangeEnd:            c.Network.Options[AciMcastRangeEnd],
-		NodeSubnet:               c.Network.Options[AciNodeSubnet],
-		AEP:                      c.Network.Options[AciAEP],
-		VRFName:                  c.Network.Options[AciVRFName],
-		VRFTenant:                c.Network.Options[AciVRFTenant],
-		L3Out:                    c.Network.Options[AciL3Out],
-		L3OutExternalNetworks:    c.Network.AciNetworkProvider.L3OutExternalNetworks,
-		DynamicExternalSubnet:    c.Network.Options[AciDynamicExternalSubnet],
-		StaticExternalSubnet:     c.Network.Options[AciStaticExternalSubnet],
-		ServiceGraphSubnet:       c.Network.Options[AciServiceGraphSubnet],
-		KubeAPIVlan:              c.Network.Options[AciKubeAPIVlan],
-		ServiceVlan:              c.Network.Options[AciServiceVlan],
-		InfraVlan:                c.Network.Options[AciInfraVlan],
-		ImagePullPolicy:          c.Network.Options[AciImagePullPolicy],
-		ImagePullSecret:          c.Network.Options[AciImagePullSecret],
-		Tenant:                   c.Network.Options[AciTenant],
-		ServiceMonitorInterval:   c.Network.Options[AciServiceMonitorInterval],
-		PBRTrackingNonSnat:       c.Network.Options[AciPBRTrackingNonSnat],
-		InstallIstio:             c.Network.Options[AciInstallIstio],
-		IstioProfile:             c.Network.Options[AciIstioProfile],
-		DropLogEnable:            c.Network.Options[AciDropLogEnable],
-		ControllerLogLevel:       c.Network.Options[AciControllerLogLevel],
-		HostAgentLogLevel:        c.Network.Options[AciHostAgentLogLevel],
-		OpflexAgentLogLevel:      c.Network.Options[AciOpflexAgentLogLevel],
-		OVSMemoryLimit:           c.Network.Options[AciOVSMemoryLimit],
-		ClusterCIDR:              c.ClusterCIDR,
-		StaticServiceIPStart:     cidr.Inc(cidr.Inc(staticServiceIPStart)),
-		StaticServiceIPEnd:       cidr.Dec(staticServiceIPEnd),
-		PodGateway:               cidr.Inc(podIPStart),
-		PodIPStart:               cidr.Inc(cidr.Inc(podIPStart)),
-		PodIPEnd:                 cidr.Dec(podIPEnd),
-		NodeServiceIPStart:       cidr.Inc(cidr.Inc(nodeServiceIPStart)),
-		NodeServiceIPEnd:         cidr.Dec(nodeServiceIPEnd),
-		ServiceIPStart:           cidr.Inc(cidr.Inc(serviceIPStart)),
-		ServiceIPEnd:             cidr.Dec(serviceIPEnd),
-		UseAciCniPriorityClass:   c.Network.Options[AciUseAciCniPriorityClass],
-		NoPriorityClass:          c.Network.Options[AciNoPriorityClass],
-		MaxNodesSvcGraph:         c.Network.Options[AciMaxNodesSvcGraph],
-		SnatContractScope:        c.Network.Options[AciSnatContractScope],
-		PodSubnetChunkSize:       c.Network.Options[AciPodSubnetChunkSize],
-		EnableEndpointSlice:      c.Network.Options[AciEnableEndpointSlice],
-		SnatNamespace:            c.Network.Options[AciSnatNamespace],
-		EpRegistry:               c.Network.Options[AciEpRegistry],
-		OpflexMode:               c.Network.Options[AciOpflexMode],
-		SnatPortRangeStart:       c.Network.Options[AciSnatPortRangeStart],
-		SnatPortRangeEnd:         c.Network.Options[AciSnatPortRangeEnd],
-		SnatPortsPerNode:         c.Network.Options[AciSnatPortsPerNode],
-		OpflexClientSSL:          c.Network.Options[AciOpflexClientSSL],
-		UsePrivilegedContainer:   c.Network.Options[AciUsePrivilegedContainer],
-		UseHostNetnsVolume:       c.Network.Options[AciUseHostNetnsVolume],
-		UseOpflexServerVolume:    c.Network.Options[AciUseOpflexServerVolume],
-		KafkaBrokers:             c.Network.AciNetworkProvider.KafkaBrokers,
-		KafkaClientCrt:           c.Network.Options[AciKafkaClientCrt],
-		KafkaClientKey:           c.Network.Options[AciKafkaClientKey],
-		SubnetDomainName:         c.Network.Options[AciSubnetDomainName],
-		CApic:                    c.Network.Options[AciCApic],
-		UseAciAnywhereCRD:        c.Network.Options[AciUseAciAnywhereCRD],
-		OverlayVRFName:           c.Network.Options[AciOverlayVRFName],
-		GbpPodSubnet:             c.Network.Options[AciGbpPodSubnet],
-		RunGbpContainer:          c.Network.Options[AciRunGbpContainer],
-		RunOpflexServerContainer: c.Network.Options[AciRunOpflexServerContainer],
-		OpflexServerPort:         c.Network.Options[AciOpflexServerPort],
-		AciCniDeployContainer:    c.SystemImages.AciCniDeployContainer,
-		AciHostContainer:         c.SystemImages.AciHostContainer,
-		AciOpflexContainer:       c.SystemImages.AciOpflexContainer,
-		AciMcastContainer:        c.SystemImages.AciMcastContainer,
-		AciOpenvSwitchContainer:  c.SystemImages.AciOpenvSwitchContainer,
-		AciControllerContainer:   c.SystemImages.AciControllerContainer,
-		AciGbpServerContainer:    c.SystemImages.AciGbpServerContainer,
-		AciOpflexServerContainer: c.SystemImages.AciOpflexServerContainer,
-		MTU:                      c.Network.MTU,
+		SystemIdentifier:                     c.Network.Options[AciSystemIdentifier],
+		ApicHosts:                            c.Network.AciNetworkProvider.ApicHosts,
+		Token:                                c.Network.Options[AciToken],
+		ApicUserName:                         c.Network.Options[AciApicUserName],
+		ApicUserKey:                          c.Network.Options[AciApicUserKey],
+		ApicUserCrt:                          c.Network.Options[AciApicUserCrt],
+		ApicRefreshTime:                      c.Network.Options[AciApicRefreshTime],
+		VmmDomain:                            c.Network.Options[AciVmmDomain],
+		VmmController:                        c.Network.Options[AciVmmController],
+		EncapType:                            c.Network.Options[AciEncapType],
+		McastRangeStart:                      c.Network.Options[AciMcastRangeStart],
+		McastRangeEnd:                        c.Network.Options[AciMcastRangeEnd],
+		NodeSubnet:                           nodeSubnets,
+		AEP:                                  c.Network.Options[AciAEP],
+		VRFName:                              c.Network.Options[AciVRFName],
+		VRFTenant:                            c.Network.Options[AciVRFTenant],
+		L3Out:                                c.Network.Options[AciL3Out],
+		L3OutExternalNetworks:                c.Network.AciNetworkProvider.L3OutExternalNetworks,
+		DynamicExternalSubnet:                dynamicExtern,
+		StaticExternalSubnet:                 staticExtern,
+		ServiceGraphSubnet:                   c.Network.Options[AciServiceGraphSubnet],
+		KubeAPIVlan:                          c.Network.Options[AciKubeAPIVlan],
+		ServiceVlan:                          c.Network.Options[AciServiceVlan],
+		InfraVlan:                            c.Network.Options[AciInfraVlan],
+		ImagePullPolicy:                      c.Network.Options[AciImagePullPolicy],
+		ImagePullSecret:                      c.Network.Options[AciImagePullSecret],
+		Tenant:                               c.Network.Options[AciTenant],
+		ServiceMonitorInterval:               c.Network.Options[AciServiceMonitorInterval],
+		PBRTrackingNonSnat:                   c.Network.Options[AciPBRTrackingNonSnat],
+		InstallIstio:                         c.Network.Options[AciInstallIstio],
+		IstioProfile:                         c.Network.Options[AciIstioProfile],
+		DropLogEnable:                        c.Network.Options[AciDropLogEnable],
+		ControllerLogLevel:                   c.Network.Options[AciControllerLogLevel],
+		HostAgentLogLevel:                    c.Network.Options[AciHostAgentLogLevel],
+		OpflexAgentLogLevel:                  c.Network.Options[AciOpflexAgentLogLevel],
+		OVSMemoryLimit:                       c.Network.Options[AciOVSMemoryLimit],
+		OVSMemoryRequest:                     c.Network.Options[AciOVSMemoryRequest],
+		ClusterCIDR:                          c.ClusterCIDR,
+		PodNetwork:                           podNetwork,
+		PodIPPool:                            podIPPool,
+		StaticServiceIPPool:                  staticServiceIPPool,
+		ServiceIPPool:                        serviceIPPool,
+		PodSubnet:                            podSubnet,
+		NodeServiceIPStart:                   cidr.Inc(cidr.Inc(nodeServiceIPStart)),
+		NodeServiceIPEnd:                     cidr.Dec(nodeServiceIPEnd),
+		UseAciCniPriorityClass:               c.Network.Options[AciUseAciCniPriorityClass],
+		NoPriorityClass:                      c.Network.Options[AciNoPriorityClass],
+		MaxNodesSvcGraph:                     c.Network.Options[AciMaxNodesSvcGraph],
+		SnatContractScope:                    c.Network.Options[AciSnatContractScope],
+		PodSubnetChunkSize:                   c.Network.Options[AciPodSubnetChunkSize],
+		EnableEndpointSlice:                  c.Network.Options[AciEnableEndpointSlice],
+		SnatNamespace:                        c.Network.Options[AciSnatNamespace],
+		EpRegistry:                           c.Network.Options[AciEpRegistry],
+		OpflexMode:                           c.Network.Options[AciOpflexMode],
+		SnatPortRangeStart:                   c.Network.Options[AciSnatPortRangeStart],
+		SnatPortRangeEnd:                     c.Network.Options[AciSnatPortRangeEnd],
+		SnatPortsPerNode:                     c.Network.Options[AciSnatPortsPerNode],
+		OpflexClientSSL:                      c.Network.Options[AciOpflexClientSSL],
+		UsePrivilegedContainer:               c.Network.Options[AciUsePrivilegedContainer],
+		UseHostNetnsVolume:                   c.Network.Options[AciUseHostNetnsVolume],
+		UseOpflexServerVolume:                c.Network.Options[AciUseOpflexServerVolume],
+		KafkaBrokers:                         c.Network.AciNetworkProvider.KafkaBrokers,
+		KafkaClientCrt:                       c.Network.Options[AciKafkaClientCrt],
+		KafkaClientKey:                       c.Network.Options[AciKafkaClientKey],
+		SubnetDomainName:                     c.Network.Options[AciSubnetDomainName],
+		CApic:                                c.Network.Options[AciCApic],
+		UseAciAnywhereCRD:                    c.Network.Options[AciUseAciAnywhereCRD],
+		OverlayVRFName:                       c.Network.Options[AciOverlayVRFName],
+		GbpPodSubnet:                         c.Network.Options[AciGbpPodSubnet],
+		RunGbpContainer:                      c.Network.Options[AciRunGbpContainer],
+		RunOpflexServerContainer:             c.Network.Options[AciRunOpflexServerContainer],
+		OpflexServerPort:                     c.Network.Options[AciOpflexServerPort],
+		DurationWaitForNetwork:               c.Network.Options[AciDurationWaitForNetwork],
+		DisableWaitForNetwork:                c.Network.Options[AciDisableWaitForNetwork],
+		UseClusterRole:                       c.Network.Options[AciUseClusterRole],
+		ApicSubscriptionDelay:                c.Network.Options[AciApicSubscriptionDelay],
+		ApicRefreshTickerAdjust:              c.Network.Options[AciApicRefreshTickerAdjust],
+		DisablePeriodicSnatGlobalInfoSync:    c.Network.Options[AciDisablePeriodicSnatGlobalInfoSync],
+		OpflexDeviceDeleteTimeout:            c.Network.Options[AciOpflexDeviceDeleteTimeout],
+		MTUHeadRoom:                          c.Network.Options[AciMTUHeadRoom],
+		NodePodIfEnable:                      c.Network.Options[AciNodePodIfEnable],
+		SriovEnable:                          c.Network.Options[AciSriovEnable],
+		MultusDisable:                        c.Network.Options[AciMultusDisable],
+		NoWaitForServiceEpReadiness:          c.Network.Options[AciNoWaitForServiceEpReadiness],
+		AddExternalSubnetsToRdconfig:         c.Network.Options[AciAddExternalSubnetsToRdconfig],
+		ServiceGraphEndpointAddDelay:         c.Network.Options[AciServiceGraphEndpointAddDelay],
+		ServiceGraphEndpointAddServices:      c.Network.AciNetworkProvider.ServiceGraphEndpointAddServices,
+		HppOptimization:                      c.Network.Options[AciHppOptimization],
+		SleepTimeSnatGlobalInfoSync:          c.Network.Options[AciSleepTimeSnatGlobalInfoSync],
+		OpflexAgentOpflexAsyncjsonEnabled:    c.Network.Options[AciOpflexAgentOpflexAsyncjsonEnabled],
+		OpflexAgentOvsAsyncjsonEnabled:       c.Network.Options[AciOpflexAgentOvsAsyncjsonEnabled],
+		OpflexAgentPolicyRetryDelayTimer:     c.Network.Options[AciOpflexAgentPolicyRetryDelayTimer],
+		AciMultipod:                          c.Network.Options[AciAciMultipod],
+		OpflexDeviceReconnectWaitTimeout:     c.Network.Options[AciOpflexDeviceReconnectWaitTimeout],
+		AciMultipodUbuntu:                    c.Network.Options[AciAciMultipodUbuntu],
+		DhcpRenewMaxRetryCount:               c.Network.Options[AciDhcpRenewMaxRetryCount],
+		DhcpDelay:                            c.Network.Options[AciDhcpDelay],
+		UseSystemNodePriorityClass:           c.Network.Options[AciUseSystemNodePriorityClass],
+		AccProvisionOperatorMemoryRequest:    c.Network.Options[AciAccProvisionOperatorMemoryRequest],
+		AccProvisionOperatorMemoryLimit:      c.Network.Options[AciAccProvisionOperatorMemoryLimit],
+		AciContainersControllerMemoryRequest: c.Network.Options[AciAciContainersControllerMemoryRequest],
+		AciContainersControllerMemoryLimit:   c.Network.Options[AciAciContainersControllerMemoryLimit],
+		AciContainersHostMemoryRequest:       c.Network.Options[AciAciContainersHostMemoryRequest],
+		AciContainersHostMemoryLimit:         c.Network.Options[AciAciContainersHostMemoryLimit],
+		AciContainersOperatorMemoryRequest:   c.Network.Options[AciAciContainersOperatorMemoryRequest],
+		AciContainersOperatorMemoryLimit:     c.Network.Options[AciAciContainersOperatorMemoryLimit],
+		McastDaemonMemoryRequest:             c.Network.Options[AciMcastDaemonMemoryRequest],
+		McastDaemonMemoryLimit:               c.Network.Options[AciMcastDaemonMemoryLimit],
+		OpflexAgentMemoryRequest:             c.Network.Options[AciOpflexAgentMemoryRequest],
+		OpflexAgentMemoryLimit:               c.Network.Options[AciOpflexAgentMemoryLimit],
+		AciContainersMemoryRequest:           c.Network.Options[AciAciContainersMemoryRequest],
+		AciContainersMemoryLimit:             c.Network.Options[AciAciContainersMemoryLimit],
+		AciCniDeployContainer:                c.SystemImages.AciCniDeployContainer,
+		AciHostContainer:                     c.SystemImages.AciHostContainer,
+		AciOpflexContainer:                   c.SystemImages.AciOpflexContainer,
+		AciMcastContainer:                    c.SystemImages.AciMcastContainer,
+		AciOpenvSwitchContainer:              c.SystemImages.AciOpenvSwitchContainer,
+		AciControllerContainer:               c.SystemImages.AciControllerContainer,
+		AciGbpServerContainer:                c.SystemImages.AciGbpServerContainer,
+		AciOpflexServerContainer:             c.SystemImages.AciOpflexServerContainer,
+		MTU:                                  c.Network.MTU,
 	}
 
 	pluginYaml, err := c.getNetworkPluginManifest(AciConfig, data)

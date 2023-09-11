@@ -11,6 +11,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/blang/semver"
 	"github.com/docker/docker/api/types"
 	"github.com/rancher/rke/docker"
 	"github.com/rancher/rke/hosts"
@@ -63,7 +64,10 @@ const (
 	KubeletCRIDockerdNameEnv = "RKE_KUBELET_CRIDOCKERD"
 )
 
-var admissionControlOptionNames = []string{"enable-admission-plugins", "admission-control"}
+var (
+	admissionControlOptionNames = []string{"enable-admission-plugins", "admission-control"}
+	parsedRangeAtLeast124       = semver.MustParseRange(">= 1.24.0-rancher0")
+)
 
 func GetServiceOptionData(data map[string]interface{}) map[string]*v3.KubernetesServicesOptions {
 	svcOptionsData := map[string]*v3.KubernetesServicesOptions{}
@@ -188,6 +192,8 @@ func (c *Cluster) BuildKubeAPIProcess(host *hosts.Host, serviceOptions v3.Kubern
 		"tls-cert-file":                pki.GetCertPath(pki.KubeAPICertName),
 		"tls-private-key-file":         pki.GetKeyPath(pki.KubeAPICertName),
 	}
+	CommandArrayArgs := make(map[string][]string, len(c.Services.KubeAPI.ExtraArgsArray))
+
 	if len(c.CloudProvider.Name) > 0 {
 		CommandArgs["cloud-config"] = cloudConfigFileName
 	}
@@ -300,10 +306,12 @@ func (c *Cluster) BuildKubeAPIProcess(host *hosts.Host, serviceOptions v3.Kubern
 		}
 	}
 
-	for arg, value := range CommandArgs {
-		cmd := fmt.Sprintf("--%s=%s", arg, value)
-		Command = append(Command, cmd)
+	for arg, value := range c.Services.KubeAPI.ExtraArgsArray {
+		CommandArrayArgs[arg] = value
 	}
+
+	Command = appendArgs(Command, CommandArgs)
+	Command = appendArrayArgs(Command, CommandArrayArgs)
 
 	Binds = append(Binds, c.Services.KubeAPI.ExtraBinds...)
 
@@ -339,8 +347,14 @@ func (c *Cluster) BuildKubeControllerProcess(host *hosts.Host, serviceOptions v3
 		"service-account-private-key-file": pki.GetKeyPath(pki.ServiceAccountTokenKeyName),
 		"service-cluster-ip-range":         c.Services.KubeController.ServiceClusterIPRange,
 	}
+	CommandArrayArgs := make(map[string][]string, len(c.Services.KubeAPI.ExtraArgsArray))
 	// Best security practice is to listen on localhost, but DinD uses private container network instead of Host.
-	if c.DinD {
+	// the flag --address is removed since k8s 1.24
+	parsedVersion, err := getClusterVersion(c.Version)
+	if err != nil {
+		logrus.Warn(err)
+	}
+	if c.DinD && !parsedRangeAtLeast124(parsedVersion) {
 		CommandArgs["address"] = "0.0.0.0"
 	}
 	if len(c.CloudProvider.Name) > 0 {
@@ -392,10 +406,13 @@ func (c *Cluster) BuildKubeControllerProcess(host *hosts.Host, serviceOptions v3
 		}
 	}
 
-	for arg, value := range CommandArgs {
-		cmd := fmt.Sprintf("--%s=%s", arg, value)
-		Command = append(Command, cmd)
+	for arg, value := range c.Services.KubeController.ExtraArgsArray {
+		CommandArrayArgs[arg] = value
 	}
+
+	Command = appendArgs(Command, CommandArgs)
+	Command = appendArrayArgs(Command, CommandArrayArgs)
+
 	k8sTag, err := util.GetImageTagFromImage(c.SystemImages.Kubernetes)
 	if err != nil {
 		logrus.Warn(err)
@@ -441,11 +458,12 @@ func (c *Cluster) BuildKubeletProcess(host *hosts.Host, serviceOptions v3.Kubern
 	kubelet := &c.Services.Kubelet
 	Command := c.getRKEToolsEntryPoint(host.OS(), "kubelet")
 	CommandArgs := map[string]string{
-		"client-ca-file":            pki.GetCertPath(pki.CACertName),
-		"cloud-provider":            c.CloudProvider.Name,
-		"cluster-dns":               c.ClusterDNSServer,
-		"cluster-domain":            c.ClusterDomain,
-		"fail-swap-on":              strconv.FormatBool(kubelet.FailSwapOn),
+		"client-ca-file": pki.GetCertPath(pki.CACertName),
+		"cloud-provider": c.CloudProvider.Name,
+		"cluster-dns":    c.ClusterDNSServer,
+		"cluster-domain": c.ClusterDomain,
+		"fail-swap-on":   strconv.FormatBool(kubelet.FailSwapOn),
+		// overrides kubernetes.io/hostname label on node, rke uses it to find node (services/node_util.go)
 		"hostname-override":         host.HostnameOverride,
 		"kubeconfig":                pki.GetConfigPath(pki.KubeNodeCertName),
 		"pod-infra-container-image": kubelet.InfraContainerImage,
@@ -473,18 +491,27 @@ func (c *Cluster) BuildKubeletProcess(host *hosts.Host, serviceOptions v3.Kubern
 		if host.IsWindows() { // compatible with Windows
 			CommandArgs["cloud-config"] = path.Join(host.PrefixPath, cloudConfigFileName)
 		}
-		if c.CloudProvider.Name == k8s.AWSCloudProvider {
-			delete(CommandArgs, "hostname-override")
-		}
 	}
 
 	if c.IsKubeletGenerateServingCertificateEnabled() {
 		CommandArgs["tls-cert-file"] = pki.GetCertPath(pki.GetCrtNameForHost(host, pki.KubeletCertName))
 		CommandArgs["tls-private-key-file"] = pki.GetCertPath(fmt.Sprintf("%s-key", pki.GetCrtNameForHost(host, pki.KubeletCertName)))
 	}
+
+	var Binds []string
+
 	if c.IsCRIDockerdEnabled() {
 		CommandArgs["container-runtime"] = "remote"
 		CommandArgs["container-runtime-endpoint"] = "/var/run/dockershim.sock"
+		parsedVersion, err := getClusterVersion(c.Version)
+		if err != nil {
+			logrus.Debugf("Error while parsing cluster version: %s", err)
+		}
+		// cri-dockerd must be enabled if the cluster version is 1.24 and higher
+		if parsedRangeAtLeast124(parsedVersion) {
+			CommandArgs["container-runtime-endpoint"] = "unix:///var/run/cri-dockerd.sock"
+			Binds = []string{fmt.Sprintf("%s:/var/lib/cri-dockerd:z", path.Join(host.PrefixPath, "/var/lib/cri-dockerd"))}
+		}
 	}
 
 	if serviceOptions.Kubelet != nil {
@@ -517,18 +544,17 @@ func (c *Cluster) BuildKubeletProcess(host *hosts.Host, serviceOptions v3.Kubern
 		services.SidekickContainerName,
 	}
 
-	var Binds []string
 	if host.IsWindows() { // compatible with Windows
-		Binds = []string{
+		Binds = append(Binds, []string{
 			// put the execution binaries and cloud provider configuration to the host
 			fmt.Sprintf("%s:c:/host/etc/kubernetes", path.Join(host.PrefixPath, "/etc/kubernetes")),
 			// put the flexvolume plugins or private registry docker configuration to the host
 			fmt.Sprintf("%s:c:/host/var/lib/kubelet", path.Join(host.PrefixPath, "/var/lib/kubelet")),
 			// exchange resources with other components
 			fmt.Sprintf("%s:c:/host/run", path.Join(host.PrefixPath, "/run")),
-		}
+		}...)
 	} else {
-		Binds = []string{
+		Binds = append(Binds, []string{
 			fmt.Sprintf("%s:/etc/kubernetes:z", path.Join(host.PrefixPath, "/etc/kubernetes")),
 			"/etc/cni:/etc/cni:rw,z",
 			"/opt/cni:/opt/cni:rw,z",
@@ -547,7 +573,7 @@ func (c *Cluster) BuildKubeletProcess(host *hosts.Host, serviceOptions v3.Kubern
 			"/var/log/pods:/var/log/pods:z",
 			"/usr:/host/usr:ro",
 			"/etc:/host/etc:ro",
-		}
+		}...)
 
 		// Special case to simplify using flex volumes
 		if path.Join(host.PrefixPath, "/var/lib/kubelet") != "/var/lib/kubelet" {
@@ -595,11 +621,19 @@ func (c *Cluster) BuildKubeletProcess(host *hosts.Host, serviceOptions v3.Kubern
 	for arg, value := range host.GetExtraArgs(kubelet.BaseService) {
 		CommandArgs[arg] = value
 	}
+	extraArgsArray := host.GetExtraArgsArray(kubelet.BaseService)
+	CommandArrayArgs := make(map[string][]string, len(extraArgsArray))
+	for arg, value := range extraArgsArray {
+		CommandArrayArgs[arg] = value
+	}
 
 	// If nodelocal DNS is configured, set cluster-dns to local IP
 	if c.DNS.Nodelocal != nil && c.DNS.Nodelocal.IPAddress != "" {
 		CommandArgs["cluster-dns"] = c.DNS.Nodelocal.IPAddress
 	}
+
+	Command = appendArgs(Command, CommandArgs)
+	Command = appendArrayArgs(Command, CommandArrayArgs)
 
 	healthCheck := v3.HealthCheck{
 		URL: services.GetHealthCheckURL(false, services.KubeletPort),
@@ -608,7 +642,7 @@ func (c *Cluster) BuildKubeletProcess(host *hosts.Host, serviceOptions v3.Kubern
 
 	return v3.Process{
 		Name:                    services.KubeletContainerName,
-		Command:                 appendArgs(Command, CommandArgs),
+		Command:                 Command,
 		VolumesFrom:             VolumesFrom,
 		Binds:                   getUniqStringList(Binds),
 		Env:                     getUniqStringList(Env),
@@ -654,7 +688,8 @@ func (c *Cluster) BuildKubeProxyProcess(host *hosts.Host, serviceOptions v3.Kube
 		} else {
 			CommandArgs["bind-address"] = host.Address
 		}
-		if c.CloudProvider.Name == k8s.AWSCloudProvider {
+		if c.CloudProvider.Name == k8s.AWSCloudProvider && c.CloudProvider.UseInstanceMetadataHostname != nil && *c.CloudProvider.UseInstanceMetadataHostname {
+			// rke-tools will inject hostname-override from ec2 instance metadata to match with the spec.nodeName set by cloud provider https://github.com/rancher/rke-tools/blob/3eab4f07aa97a8aeeaaef55b1b7bbc82e2a3374a/entrypoint.sh#L17
 			delete(CommandArgs, "hostname-override")
 		}
 	}
@@ -707,13 +742,22 @@ func (c *Cluster) BuildKubeProxyProcess(host *hosts.Host, serviceOptions v3.Kube
 		CommandArgs[arg] = value
 	}
 
+	extraArgsArray := host.GetExtraArgsArray(kubeproxy.BaseService)
+	CommandArrayArgs := make(map[string][]string, len(extraArgsArray))
+	for arg, value := range extraArgsArray {
+		CommandArrayArgs[arg] = value
+	}
+
+	Command = appendArgs(Command, CommandArgs)
+	Command = appendArrayArgs(Command, CommandArrayArgs)
+
 	healthCheck := v3.HealthCheck{
 		URL: services.GetHealthCheckURL(false, services.KubeproxyPort),
 	}
 	registryAuthConfig, _, _ := docker.GetImageRegistryConfig(kubeproxy.Image, c.PrivateRegistriesMap)
 	return v3.Process{
 		Name:                    services.KubeproxyContainerName,
-		Command:                 appendArgs(Command, CommandArgs),
+		Command:                 Command,
 		VolumesFrom:             VolumesFrom,
 		Binds:                   getUniqStringList(Binds),
 		Env:                     getUniqStringList(Env),
@@ -786,9 +830,11 @@ func (c *Cluster) BuildSchedulerProcess(host *hosts.Host, serviceOptions v3.Kube
 	CommandArgs := map[string]string{
 		"kubeconfig": pki.GetConfigPath(pki.KubeSchedulerCertName),
 	}
-
+	CommandArrayArgs := make(map[string][]string, len(c.Services.KubeAPI.ExtraArgsArray))
 	// Best security practice is to listen on localhost, but DinD uses private container network instead of Host.
-	if c.DinD {
+	// the flag --address is removed since k8s 1.24
+	parsedVersion, _ := getClusterVersion(c.Version)
+	if c.DinD && !parsedRangeAtLeast124(parsedVersion) {
 		CommandArgs["address"] = "0.0.0.0"
 	}
 
@@ -827,10 +873,12 @@ func (c *Cluster) BuildSchedulerProcess(host *hosts.Host, serviceOptions v3.Kube
 		}
 	}
 
-	for arg, value := range CommandArgs {
-		cmd := fmt.Sprintf("--%s=%s", arg, value)
-		Command = append(Command, cmd)
+	for arg, value := range c.Services.Scheduler.ExtraArgsArray {
+		CommandArrayArgs[arg] = value
 	}
+
+	Command = appendArgs(Command, CommandArgs)
+	Command = appendArrayArgs(Command, CommandArrayArgs)
 
 	Binds = append(Binds, c.Services.Scheduler.ExtraBinds...)
 
@@ -969,6 +1017,7 @@ func (c *Cluster) BuildEtcdProcess(host *hosts.Host, etcdHosts []*hosts.Host, se
 		"peer-cert-file":              pki.GetCertPath(nodeName),
 		"peer-key-file":               pki.GetKeyPath(nodeName),
 	}
+	CommandArrayArgs := make(map[string][]string, len(c.Services.KubeAPI.ExtraArgsArray))
 
 	etcdTag, err := util.GetImageTagFromImage(c.Services.Etcd.Image)
 	if err != nil {
@@ -1035,6 +1084,10 @@ func (c *Cluster) BuildEtcdProcess(host *hosts.Host, etcdHosts []*hosts.Host, se
 		}
 	}
 
+	for arg, value := range c.Services.Etcd.ExtraArgsArray {
+		CommandArrayArgs[arg] = value
+	}
+
 	// adding the old default value from L922 if not present in metadata options or passed by user
 	if _, ok := CommandArgs["client-cert-auth"]; !ok {
 		args = append(args, "--client-cert-auth")
@@ -1043,10 +1096,8 @@ func (c *Cluster) BuildEtcdProcess(host *hosts.Host, etcdHosts []*hosts.Host, se
 		args = append(args, "--peer-client-cert-auth")
 	}
 
-	for arg, value := range CommandArgs {
-		cmd := fmt.Sprintf("--%s=%s", arg, value)
-		args = append(args, cmd)
-	}
+	args = appendArgs(args, CommandArgs)
+	args = appendArrayArgs(args, CommandArrayArgs)
 
 	Binds = append(Binds, c.Services.Etcd.ExtraBinds...)
 	healthCheck := v3.HealthCheck{
@@ -1209,6 +1260,15 @@ func getNetworkJSON(netconfig v3.NetworkConfig) string {
 func appendArgs(command []string, args map[string]string) []string {
 	for arg, value := range args {
 		command = append(command, fmt.Sprintf("--%s=%s", arg, value))
+	}
+	return command
+}
+
+func appendArrayArgs(command []string, args map[string][]string) []string {
+	for arg, value := range args {
+		for _, v := range value {
+			command = append(command, fmt.Sprintf("--%s=%s", arg, v))
+		}
 	}
 	return command
 }
